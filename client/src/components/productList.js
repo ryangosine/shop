@@ -18,7 +18,7 @@ const ProductList = () => {
 
   return (
     <ProductListWrapper>
-      <ProductListContainer>
+
         {products.map((product) => (
           <ProductCard key={product.id}>
             <h2>{product.title}</h2>
@@ -27,29 +27,33 @@ const ProductList = () => {
             <p>Category: {product.category}</p>
           </ProductCard>
         ))}
-      </ProductListContainer>
+
     </ProductListWrapper>
   );
 };
 
 const ProductListWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+    display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
 `;
 
-const ProductListContainer = styled.div``;
 
 const ProductCard = styled.div`
-  border: 1px solid #ccc;
+border: 1px solid #ccc;
   padding: 10px;
-  margin: 10px;
-  width: 200px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const ProductImage = styled.img`
   width: 100%;
-  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
 `;
 
 export default ProductList;

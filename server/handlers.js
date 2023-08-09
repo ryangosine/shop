@@ -20,12 +20,12 @@ const app = express();
 const { restart } = require("nodemon");
 
 
-const addUser = async (req,res) => {
-    try {
-        const {username, password } = req.body;
+// const addUser = async (req,res) => {
+//     try {
+//         const {username, password } = req.body;
 
-        // const hashedPassword = await 
-    }
-}
+    
+//     }
+// }
 
 module.exports = {};
