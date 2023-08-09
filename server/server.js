@@ -28,7 +28,7 @@ express()
   //   .get("/api/get-cards", getCards)
   //   .get("/api/get-card/:id", getCard)
   //   .post("/api/get-user", getUser)
-  //   .post("/api/add-user", addUser)
+  .post("/api/add-user", addUser)
 
   // ---------------------------------
   // Nothing to modify below this line
