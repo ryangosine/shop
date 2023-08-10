@@ -2,13 +2,13 @@
 
 const express = require("express");
 const morgan = require("morgan");
-// const bodyParser = require("body-parser");
-// const { users } = require("./database");
-// const { getCards, getCard, getUser, addUser } = require("./handlers");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
-// const cors = require("cors");
-// const multer = require("multer");
-// const upload = multer({ destination: "/uploads/" });
+mongoose.connect("mongodb://localhost:27017/ShopData/users", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 express()
   // Below are methods that are included in express(). We chain them for convenience.
@@ -19,19 +19,23 @@ express()
   .use(express.json())
 
   // Any requests for static files will go into the public folder
-  .use(express.static("public"))
+  .use(express.static("public"));
 
-  // Nothing to modify above this line
-  //          ENDPOINTS
+//          ENDPOINTS
+// ---------------------------------
+app
+  .post("/register", async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+      const user = new User({ username, email, password });
+      await user.save();
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  })
+
   // ---------------------------------
-
-  //   .get("/api/get-cards", getCards)
-  //   .get("/api/get-card/:id", getCard)
-  //   .post("/api/get-user", getUser)
-  .post("/api/add-user", addUser)
-
-  // ---------------------------------
-  // Nothing to modify below this line
 
   // this is our catch all endpoint.
   .get("*", (req, res) => {
@@ -41,5 +45,5 @@ express()
     });
   })
 
-  // Node spins up our server and sets it to listen on port 3000.
+  // Node spins up our server and sets it to listen on port 8000.
   .listen(8000, () => console.log(`Listening on port 8000`));
