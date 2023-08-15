@@ -10,7 +10,13 @@ const RegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/register", { username, email, password });
+      const requestData = { username, email, password };
+      console.log("request payload", requestData);
+      await axios.post("/register", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       alert("Registration successful");
     } catch (error) {
       console.error(error);
