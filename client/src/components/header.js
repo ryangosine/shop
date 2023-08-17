@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Header = () => {
@@ -8,7 +8,10 @@ const Header = () => {
       <HeaderTitle>Shop</HeaderTitle>
       <Nav>
         <NavLink to="/">Home</NavLink>
+        <NavLink to="/login">Login</NavLink>
+
         <NavLink to="/register">Register</NavLink>
+
         {/* Add more navigation links */}
       </Nav>
     </HeaderWrapper>

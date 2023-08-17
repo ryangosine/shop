@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
+import Header from "../components/header";
 
 const RegistrationPage = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const requestData = { username, email, password };
+      const requestData = { email, password };
       console.log("request payload", requestData);
       await axios.post("/register", requestData, {
         headers: {
@@ -24,30 +24,27 @@ const RegistrationPage = () => {
   };
 
   return (
-    <RegistrationContainer>
-      <h2>Registration Page</h2>
-      <RegistrationForm onSubmit={handleSubmit}>
-        <InputField
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <InputField
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <InputField
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <SubmitButton type="submit">Register</SubmitButton>
-      </RegistrationForm>
-    </RegistrationContainer>
+    <>
+      <Header />
+      <RegistrationContainer>
+        <h2>Registration Page</h2>
+        <RegistrationForm onSubmit={handleSubmit}>
+          <InputField
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <InputField
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <SubmitButton type="submit">Register</SubmitButton>
+        </RegistrationForm>
+      </RegistrationContainer>
+    </>
   );
 };
 
