@@ -1,26 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { CurrentUserContext } from "../context/currentusercontext";
 import LogoutButton from "./logoutButton";
 
 const Header = ({ isLoggedIn, firstName }) => {
+  const { currentUser } = useContext(CurrentUserContext);
   return (
     <HeaderWrapper>
       <HeaderTitle>Shop</HeaderTitle>
-      {isLoggedIn && (
+      {currentUser.email ? (
         <>
-          <Greeting>Hello {firstName}!</Greeting>
+          <Greeting>Hello {currentUser.firstName}!</Greeting>
           <LogoutButton />
         </>
+      ) : (
+        <Nav>
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/login">Login</NavLink>
+          <NavLink to="/register">Register</NavLink>
+        </Nav>
       )}
-      <Nav>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/login">Login</NavLink>
-
-        <NavLink to="/register">Register</NavLink>
-
-        {/* Add more navigation links */}
-      </Nav>
     </HeaderWrapper>
   );
 };
