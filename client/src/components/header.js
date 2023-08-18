@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import LogoutButton from "./logoutButton";
 
 const Header = ({ isLoggedIn, firstName }) => {
   return (
     <HeaderWrapper>
       <HeaderTitle>Shop</HeaderTitle>
-      {isLoggedIn && <Greeting>Hello {firstName}!</Greeting>}
+      {isLoggedIn && (
+        <>
+          <Greeting>Hello {firstName}!</Greeting>
+          <LogoutButton />
+        </>
+      )}
       <Nav>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/login">Login</NavLink>
