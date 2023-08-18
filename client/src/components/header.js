@@ -1,11 +1,12 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const Header = () => {
+const Header = ({ isLoggedIn, firstName }) => {
   return (
     <HeaderWrapper>
       <HeaderTitle>Shop</HeaderTitle>
+      {isLoggedIn && <Greeting>Hello {firstName}!</Greeting>}
       <Nav>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/login">Login</NavLink>
@@ -30,6 +31,8 @@ const HeaderWrapper = styled.div`
 const HeaderTitle = styled.h1`
   margin: 0;
 `;
+
+const Greeting = styled.h3``;
 
 const Nav = styled.nav`
   display: flex;

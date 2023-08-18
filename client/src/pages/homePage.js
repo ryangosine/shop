@@ -5,7 +5,6 @@ import ProductList from "../components/productList";
 const HomePage = () => {
   return (
     <>
-      <Header />
       <ProductList />
     </>
   );

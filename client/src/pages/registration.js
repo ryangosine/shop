@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
-import Header from "../components/header";
 
 const RegistrationPage = () => {
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const requestData = { email, password };
-      console.log("request payload", requestData);
+      const requestData = { firstName, email, password };
+      console.log("requestData", requestData);
       await axios.post("/register", requestData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      localStorage.setItem("firstName", firstName);
       alert("Registration successful");
+      window.location.href = "/login";
     } catch (error) {
       console.error(error);
     }
@@ -25,10 +27,15 @@ const RegistrationPage = () => {
 
   return (
     <>
-      <Header />
       <RegistrationContainer>
         <h2>Registration Page</h2>
         <RegistrationForm onSubmit={handleSubmit}>
+          <InputField
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
           <InputField
             type="email"
             placeholder="Email"

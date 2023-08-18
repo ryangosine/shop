@@ -1,21 +1,30 @@
-import React, { createContext } from "react";
-import { useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const CurrentUserContext = createContext();
 
 export const CurrentUserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = React.useState(null);
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [loggedOut, setLoggedOut] = React.useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    email: null,
+    firstName: "",
+  });
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedOut, setLoggedOut] = useState(false);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     console.log("loggedInUser", loggedInUser);
     if (loggedInUser) {
-      setCurrentUser(loggedInUser);
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        email: loggedInUser,
+        firstName: localStorage.getItem("firstName") || "",
+      }));
       setLoggedIn(true);
     } else {
-      setCurrentUser({});
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        firstName: "",
+      }));
       setLoggedOut(true);
     }
   }, []);

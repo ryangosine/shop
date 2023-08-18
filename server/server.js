@@ -69,7 +69,10 @@ app.post("/login", async (req, res) => {
 
     if (await validCredentials(email, password)) {
       req.session.user = { email };
-      res.status(200).json({ message: "Login successful" });
+      const user = await User.findOne({ email });
+      res
+        .status(200)
+        .json({ message: "Login successful", firstName: user.firstName });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
@@ -83,8 +86,13 @@ app.post("/login", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({ email, password: await bcrypt.hash(password, 10) });
+    console.log("requestbody", req.body);
+    const { firstName, email, password } = req.body;
+    const user = new User({
+      firstName,
+      email,
+      password: await bcrypt.hash(password, 10),
+    });
     await user.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {

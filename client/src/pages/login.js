@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import { styled } from "styled-components";
-import Header from "../components/header";
 import { CurrentUserContext } from "../context/currentusercontext";
 import axios from "axios";
 
 const LoginPage = () => {
-  const { setCurrentUser, setLoggedIn } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,13 +19,15 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
       });
-      if (response.status === 200) {
-        setCurrentUser(email);
-        setLoggedIn(true);
-        localStorage.setItem("user", email);
-      } else {
-        console.log("Login Failed:", response.data.error);
-      }
+      const { firstName } = response.data;
+      localStorage.setItem("user", email);
+      localStorage.setItem("firstName", firstName);
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        email,
+        firstName,
+      }));
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
     }
@@ -34,7 +35,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
       <LoginContainer>
         <h2>Log In </h2>
         <LoginForm onSubmit={handleLogin}>
