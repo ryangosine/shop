@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
 import LogoutButton from "./logoutButton";
 
-const Header = ({ isLoggedIn, firstName }) => {
+const Header = () => {
   const { currentUser } = useContext(CurrentUserContext);
   return (
     <HeaderWrapper>
@@ -38,7 +38,7 @@ const HeaderTitle = styled.h1`
   margin: 0;
 `;
 
-const Greeting = styled.h3``;
+const Greeting = styled.p``;
 
 const Nav = styled.nav`
   display: flex;
