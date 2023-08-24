@@ -26,31 +26,31 @@ const ProductList = () => {
     <>
       <CategoryHeader>
         <CategoryButton
-          active={selectedCategory === "all"}
+          active={selectedCategory.toString() === "all"}
           onClick={() => setSelectedCategory("all")}
         >
           All
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory === "jewelery"}
+          active={selectedCategory.toString() === "jewelery"}
           onClick={() => setSelectedCategory("jewelery")}
         >
           Jewelry
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory === "men's clothing"}
+          active={selectedCategory.toString() === "men's clothing"}
           onClick={() => setSelectedCategory("men's clothing")}
         >
           Men's Clothing
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory === "women's clothing"}
+          active={selectedCategory.toString() === "women's clothing"}
           onClick={() => setSelectedCategory("women's clothing")}
         >
           Women's Clothing
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory === "electronics"}
+          active={selectedCategory.toString() === "electronics"}
           onClick={() => setSelectedCategory("electronics")}
         >
           Electronics
@@ -83,7 +83,6 @@ const CategoryButton = styled.button`
   border: none;
   cursor: pointer;
 
-  /* Apply styles conditionally based on the active prop */
   ${(props) =>
     props.active &&
     css`

@@ -6,7 +6,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
-const User = require("./models/user"); // Import the User model
+const User = require("./models/user");
+const usersRoutes = require("./routes/users");
 
 mongoose.connect(
   "mongodb+srv://ryanganeshgosine:TWiE1Jo7AohV006X@cluster0.zvnb2sn.mongodb.net/Shop",
@@ -31,6 +32,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use("/api/users", usersRoutes);
 
 const validCredentials = async (email, password) => {
   try {
@@ -111,6 +114,26 @@ app.post("/logout", (req, res) => {
   } catch (error) {
     console.error("Error during Logout", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// update password
+
+app.put("/api/users/:userId/password", async (req, res) => {
+  const { userId } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { password: newPassword },
+      { new: true }
+    );
+    console.log("Password Changed Successfully");
+    res.status(200).json({ message: "Password Successfully Changed" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

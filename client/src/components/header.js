@@ -8,17 +8,20 @@ const Header = () => {
   const { currentUser } = useContext(CurrentUserContext);
   return (
     <HeaderWrapper>
-      <HeaderTitle>Shop</HeaderTitle>
+      <StyledLink to="/" className="link-no-style">
+        <HeaderTitle>Shop</HeaderTitle>
+      </StyledLink>
       {currentUser.email ? (
         <>
           <Greeting>Hello {currentUser.firstName}!</Greeting>
+          <StyledNavLink to="/dashboard">Dashboard</StyledNavLink>
           <LogoutButton />
         </>
       ) : (
         <Nav>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/login">Login</NavLink>
-          <NavLink to="/register">Register</NavLink>
+          <StyledNavLink to="/">Home</StyledNavLink>
+          <StyledNavLink to="/login">Login</StyledNavLink>
+          <StyledNavLink to="/register">Register</StyledNavLink>
         </Nav>
       )}
     </HeaderWrapper>
@@ -38,6 +41,29 @@ const HeaderTitle = styled.h1`
   margin: 0;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`;
+
+const StyledNavLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+`;
+
 const Greeting = styled.p``;
 
 const Nav = styled.nav`
@@ -45,13 +71,7 @@ const Nav = styled.nav`
   gap: 1rem;
 `;
 
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: white;
-
-  &:hover {
-    text-decoration: underline;
-  }
+const LoggedInNav = styled(Nav)`
+  align-items: flex-end;
 `;
-
 export default Header;

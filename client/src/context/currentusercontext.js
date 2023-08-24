@@ -4,6 +4,7 @@ export const CurrentUserContext = createContext();
 
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({
+    _id: null,
     email: null,
     firstName: "",
   });
@@ -14,11 +15,10 @@ export const CurrentUserProvider = ({ children }) => {
     const loggedInUser = localStorage.getItem("user");
     console.log("loggedInUser", loggedInUser);
     if (loggedInUser) {
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        email: loggedInUser,
-        firstName: localStorage.getItem("firstName") || "",
-      }));
+      const userFromLocalStorage = JSON.parse(loggedInUser);
+      setCurrentUser({
+        ...userFromLocalStorage,
+      });
       setLoggedIn(true);
     } else {
       setCurrentUser((prevUser) => ({
@@ -28,6 +28,13 @@ export const CurrentUserProvider = ({ children }) => {
       setLoggedOut(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      // Store the updated currentUser in localStorage whenever it changes
+      localStorage.setItem("user", JSON.stringify(currentUser));
+    }
+  }, [loggedIn, currentUser]);
 
   return (
     <CurrentUserContext.Provider

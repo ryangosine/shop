@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
 import axios from "axios";
@@ -8,6 +8,7 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,19 +21,19 @@ const LoginPage = () => {
         },
       });
       const { firstName } = response.data;
-      localStorage.setItem("user", email);
-      localStorage.setItem("firstName", firstName);
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        email,
-        firstName,
-      }));
-      window.location.href = "/";
+      localStorage.setItem("user", JSON.stringify({ email, firstName }));
+      setCurrentUser({ ...currentUser, email, firstName });
+      setLoggedIn(true);
     } catch (error) {
       console.error(error);
     }
   };
 
+  useEffect(() => {
+    if (loggedIn) {
+      window.location.href = "/";
+    }
+  }, [loggedIn]);
   return (
     <>
       <LoginContainer>

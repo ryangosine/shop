@@ -8,6 +8,7 @@ import {
   CurrentUserProvider,
 } from "./context/currentusercontext";
 import Header from "./components/header";
+import Dashboard from "./pages/dashboard";
 
 const App = () => {
   const { currentUser } = useContext(CurrentUserContext);
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </CurrentUserProvider>
