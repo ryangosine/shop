@@ -38,15 +38,8 @@ app.use("/api/users", usersRoutes);
 const validCredentials = async (email, password) => {
   try {
     const user = await User.findOne({ email: email });
-    console.log("user", user);
     if (user) {
-      console.log("Request Body:", { email, password }); // Log the request body
-      console.log("user:", user);
-      console.log("user password:", user.password);
-      console.log("hashed password:", user.password);
-
-      const passwordMatch = await user.comparePassword(password, user.password);
-      console.log("passwordMatch", passwordMatch);
+      const passwordMatch = await user.compareHashedPassword(password);
       return passwordMatch;
     } else {
       console.log("User not found for email:", email);
@@ -76,13 +69,11 @@ app.post("/login", async (req, res) => {
     if (await validCredentials(email, password)) {
       req.session.user = { email };
       const user = await User.findOne({ email });
-      res
-        .status(200)
-        .json({
-          message: "Login successful",
-          firstName: user.firstName,
-          _id: user._id,
-        });
+      res.status(200).json({
+        message: "Login successful",
+        firstName: user.firstName,
+        _id: user._id,
+      });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
@@ -131,6 +122,7 @@ app.put("/api/users/:_id/password", async (req, res) => {
   const { newPassword } = req.body;
 
   try {
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     const user = await User.findByIdAndUpdate(
       _id,
       { password: newPassword },

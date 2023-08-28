@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 router.put("/:_id/password", async (req, res) => {
   const { _id } = req.params;
@@ -8,9 +9,10 @@ router.put("/:_id/password", async (req, res) => {
   const { newPassword } = req.body;
 
   try {
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     const user = await User.findByIdAndUpdate(
       _id,
-      { password: newPassword },
+      { password: hashedNewPassword },
       { new: true }
     );
     console.log("Password Changed Successfully");

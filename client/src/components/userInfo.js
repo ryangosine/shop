@@ -4,10 +4,9 @@ import { styled } from "styled-components";
 
 const UserInformation = ({ user }) => {
   const [newPassword, setNewPassword] = useState("");
-  console.log("user", user);
   console.log("User ID", user._id);
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     console.log("User ID", user._id);
 
@@ -16,15 +15,16 @@ const UserInformation = ({ user }) => {
       return;
     }
 
-    axios
-      .put(`/api/users/${user._id}/password`, { newPassword })
-      .then((response) => {
-        console.log(response.data.message);
-        setNewPassword("");
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      // Send the new password to the backend to be updated
+      const response = await axios.put(`/api/users/${user._id}/password`, {
+        newPassword: newPassword,
       });
+      console.log(response.data.message);
+      setNewPassword("");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <UserInfoContainer>
