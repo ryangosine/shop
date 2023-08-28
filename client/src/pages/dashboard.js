@@ -7,7 +7,6 @@ const Dashboard = () => {
   const { currentUser } = useContext(CurrentUserContext);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
   console.log("Current User", currentUser);
-
   const toggleCardExpansion = (e) => {
     if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") {
       e.stopPropagation();

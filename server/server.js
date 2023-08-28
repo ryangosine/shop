@@ -40,9 +40,12 @@ const validCredentials = async (email, password) => {
     const user = await User.findOne({ email: email });
     console.log("user", user);
     if (user) {
+      console.log("Request Body:", { email, password }); // Log the request body
+      console.log("user:", user);
       console.log("user password:", user.password);
-      console.log("hashed password:", password);
-      const passwordMatch = await user.comparePassword(password);
+      console.log("hashed password:", user.password);
+
+      const passwordMatch = await user.comparePassword(password, user.password);
       console.log("passwordMatch", passwordMatch);
       return passwordMatch;
     } else {

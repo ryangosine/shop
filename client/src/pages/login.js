@@ -20,9 +20,9 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
       });
-      const { firstName } = response.data;
-      localStorage.setItem("user", JSON.stringify({ email, firstName }));
-      setCurrentUser({ ...currentUser, email, firstName });
+      const { _id, firstName } = response.data;
+      localStorage.setItem("user", JSON.stringify({ email, firstName, _id }));
+      setCurrentUser({ ...currentUser, email, firstName, _id });
       setLoggedIn(true);
     } catch (error) {
       console.error(error);

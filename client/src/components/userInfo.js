@@ -7,14 +7,19 @@ const UserInformation = ({ user }) => {
   console.log("User ID", user._id);
 
   const handleChangePassword = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
+    e.preventDefault();
     console.log("User ID", user._id);
+
+    if (!newPassword) {
+      console.log("New Password Is Empty");
+      return;
+    }
+
     axios
       .put(`/api/users/${user._id}/password`, { newPassword })
       .then((response) => {
         console.log(response.data.message);
-        setNewPassword(newPassword);
+        setNewPassword("");
       })
       .catch((error) => {
         console.log(error);
