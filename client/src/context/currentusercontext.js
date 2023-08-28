@@ -17,6 +17,7 @@ export const CurrentUserProvider = ({ children }) => {
     if (loggedInUser) {
       const userFromLocalStorage = JSON.parse(loggedInUser);
       setCurrentUser({
+        _id: userFromLocalStorage._id,
         ...userFromLocalStorage,
       });
       setLoggedIn(true);
@@ -32,7 +33,10 @@ export const CurrentUserProvider = ({ children }) => {
   useEffect(() => {
     if (loggedIn) {
       // Store the updated currentUser in localStorage whenever it changes
-      localStorage.setItem("user", JSON.stringify(currentUser));
+      setCurrentUser((prevUser) => {
+        localStorage.setItem("user", JSON.stringify(prevUser));
+        return prevUser;
+      });
     }
   }, [loggedIn, currentUser]);
 

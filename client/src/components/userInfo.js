@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 
 const UserInformation = ({ user }) => {
   const [newPassword, setNewPassword] = useState("");
+  console.log("user", user);
   console.log("User ID", user._id);
 
   const handleChangePassword = (e) => {

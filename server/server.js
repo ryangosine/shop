@@ -78,7 +78,11 @@ app.post("/login", async (req, res) => {
       const user = await User.findOne({ email });
       res
         .status(200)
-        .json({ message: "Login successful", firstName: user.firstName });
+        .json({
+          message: "Login successful",
+          firstName: user.firstName,
+          _id: user._id,
+        });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
@@ -122,13 +126,13 @@ app.post("/logout", (req, res) => {
 
 // update password
 
-app.put("/api/users/:userId/password", async (req, res) => {
-  const { userId } = req.params;
+app.put("/api/users/:_id/password", async (req, res) => {
+  const { _id } = req.params;
   const { newPassword } = req.body;
 
   try {
     const user = await User.findByIdAndUpdate(
-      userId,
+      _id,
       { password: newPassword },
       { new: true }
     );
