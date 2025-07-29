@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled, { css } from "styled-components";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "../reducers/cartSlice";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const dispatch = useDispatch(); // Create a dispatch function
 
   useEffect(() => {
     axios
@@ -21,6 +24,10 @@ const ProductList = () => {
     selectedCategory === "all"
       ? products
       : products.filter((product) => product.category === selectedCategory);
+
+  const handleAddToCart = (product) => {
+    dispatch(addItemToCart(product)); // Dispatch the action with the product
+  };
 
   return (
     <>
@@ -64,6 +71,9 @@ const ProductList = () => {
             <ProductImage src={product.image} alt={product.title} />
             <p>Price: ${product.price}</p>
             <p>Category: {product.category}</p>
+            <button onClick={() => handleAddToCart(product)}>
+              Add to Cart
+            </button>
           </ProductCard>
         ))}
       </ProductListWrapper>

@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
 import LogoutButton from "./logoutButton";
+import { useSelector } from "react-redux";
+import CartIcon from "./cartIcon";
 
 const Header = () => {
   const { currentUser } = useContext(CurrentUserContext);
+
+  const cartItems = useSelector((state) => state.cart);
+
   return (
     <HeaderWrapper>
       <StyledLink to="/" className="link-no-style">
@@ -15,6 +20,9 @@ const Header = () => {
         <>
           <Greeting>Hello {currentUser.firstName}!</Greeting>
           <StyledNavLink to="/dashboard">Dashboard</StyledNavLink>
+          <Link to="/cart">
+            <CartIcon itemCount={cartItems.length} />
+          </Link>
           <LogoutButton />
         </>
       ) : (

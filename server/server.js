@@ -83,22 +83,58 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//check to see if email is taken
+
+app.get("/api/users/check-email", async (req, res) => {
+  try {
+    const { email } = req.query;
+    const existingUser = await User.findOne({ email });
+    res.json({ exists: !!existingUser });
+  } catch (err) {
+    console.error("Check email error:", err);
+    res.status(500).json({ error: "Failed to check email" });
+  }
+});
+
 // Registration
 
 app.post("/register", async (req, res) => {
   try {
     console.log("requestbody", req.body);
-    const { firstName, email, password } = req.body;
+    const { firstName, lastName, email, password, passwordConfirm } = req.body;
+
+    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+      return res.status(400).json({ error: "All Fields Are Required" });
+    }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "User Already Exists" });
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+8,$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        error:
+          "Password must include at least one lowercase letter, one uppercase letter, and one special character and be at least 8 characters long.",
+      });
+    }
+
+    if (password !== passwordConfirm) {
+      return res.status(400).json({ error: "Passwords do not match." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       firstName,
+      lastName,
       email,
-      password: await bcrypt.hash(password, 10),
+      password: hashedPassword,
     });
     await user.save();
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error(error); // Log the error to the console
-    res.status(500).json({ error: error.message });
+    console.error("Registration Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

@@ -9,6 +9,7 @@ import {
 } from "./context/currentusercontext";
 import Header from "./components/header";
 import Dashboard from "./pages/dashboard";
+import Cart from "./pages/cart";
 
 const App = () => {
   const { currentUser } = useContext(CurrentUserContext);
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/cart" element={Cart} />
         </Routes>
       </Router>
     </CurrentUserProvider>

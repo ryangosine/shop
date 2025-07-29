@@ -1,10 +1,19 @@
 import React from "react";
-import { styled } from "styled-components";
 import ProductList from "../components/productList";
+import { useDispatch, useSelector } from "react-redux";
+import { addItemToCart } from "../reducers/cartSlice";
+
 const HomePage = () => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart);
+
+  const handleAddToCart = (product) => {
+    dispatch(addItemToCart(product));
+  };
+
   return (
     <>
-      <ProductList />
+      <ProductList onAddToCart={handleAddToCart} />
     </>
   );
 };

@@ -23,6 +23,17 @@ router.put("/:_id/password", async (req, res) => {
   }
 });
 
+router.get("/check-email", async (req, res) => {
+  try {
+    const { email } = req.query;
+    const existingUser = await User.findOne({ email });
+    res.json({ exists: !!existingUser });
+  } catch (err) {
+    console.error("Error checking email:", err);
+    res.status(500).json({ error: "Failed to check email" });
+  }
+});
+
 router.get("/:userId/orders", async (req, res) => {
   const { userId } = req.params;
 
