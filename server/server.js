@@ -100,43 +100,85 @@ app.get("/api/users/check-email", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   try {
-    console.log("requestbody", req.body);
-    const { firstName, lastName, email, password, passwordConfirm } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
-      return res.status(400).json({ error: "All Fields Are Required" });
+    // Ensure all required fields are present
+    if (!firstName || !lastName || !email || !password) {
+      console.log("Missing fields in registration");
+      return res.status(400).json({ error: "All fields are required." });
     }
+
     const existingUser = await User.findOne({ email });
+    console.log("Existing user found for email", email, ":", existingUser);
     if (existingUser) {
-      return res.status(400).json({ error: "User Already Exists" });
-    }
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+8,$/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        error:
-          "Password must include at least one lowercase letter, one uppercase letter, and one special character and be at least 8 characters long.",
-      });
-    }
-
-    if (password !== passwordConfirm) {
-      return res.status(400).json({ error: "Passwords do not match." });
+      console.log(
+        `Email ${email} is already registered. Sending error response.`
+      );
+      return res.status(400).json({ error: "Email is already Registered" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
+
+    const newUser = new User({
       firstName,
       lastName,
       email,
       password: hashedPassword,
     });
-    await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    await newUser.save();
+    console.log("New user saved to DB:", newUser);
+    res.status(201).json({ message: "User registered successfully." });
   } catch (error) {
-    console.error("Registration Error:", error);
+    console.error("Registration error:", error);
+
+    if (error.code === 11000 && error.keyValue.email) {
+      return res.status(400).json({ error: "Email is already registered." });
+    }
+
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// app.post("/register", async (req, res) => {
+//   try {
+//     console.log("requestbody", req.body);
+//     const { firstName, lastName, email, password, passwordConfirm } = req.body;
+
+//     if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+//       return res.status(400).json({ error: "All Fields Are Required" });
+//     }
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ error: "User Already Exists" });
+//     }
+//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+8,$/;
+//     if (!passwordRegex.test(password)) {
+//       return res.status(400).json({
+//         error:
+//           "Password must include at least one lowercase letter, one uppercase letter, and one special character and be at least 8 characters long.",
+//       });
+//     }
+
+//     if (password !== passwordConfirm) {
+//       return res.status(400).json({ error: "Passwords do not match." });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const user = new User({
+//       firstName,
+//       lastName,
+//       email,
+//       password: hashedPassword,
+//     });
+//     await user.save();
+
+//     res.status(201).json({ message: "User registered successfully" });
+//   } catch (error) {
+//     console.error("Registration Error:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 // logout
 
