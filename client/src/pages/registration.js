@@ -11,8 +11,6 @@ const RegistrationPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const emptyAddr = { street: "", city: "", province: "", postalCode: "" };
   const [addr, setAddr] = useState(emptyAddr);

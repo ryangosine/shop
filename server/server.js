@@ -222,10 +222,13 @@ addrRouter.delete("/:aid", async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ error: "User not found." });
 
-    const addr = user.addresses.id(req.params.aid);
-    if (!addr) return res.status(404).json({ error: "Address not found." });
+    const addrIndex = user.addresses.findIndex(
+      (a) => a._id.toString() === req.params.aid
+    );
+    if (addrIndex === -1)
+      return res.status(404).json({ error: "Address not found." });
 
-    addr.remove();
+    user.addresses.splice(addrIndex, 1);
     await user.save();
 
     res.json({ message: "Address removed." });

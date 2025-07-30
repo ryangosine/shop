@@ -2,9 +2,12 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
 import UserInformation from "../components/userInfo";
+import { useNavigate } from "react-router";
 
 const Dashboard = () => {
   const { currentUser } = useContext(CurrentUserContext);
+  const navigate = useNavigate();
+
   const [isCardExpanded, setIsCardExpanded] = useState(false);
   console.log("Current User", currentUser);
 
@@ -33,6 +36,12 @@ const Dashboard = () => {
           </CardContent>
         )}
       </UserCard>
+
+      <AddressCardLink onClick={() => navigate("/addresses")}>
+        <h3>Your Addresses</h3>
+        <p>Manage your address information</p>
+        <p>Click to view all addresses</p>
+      </AddressCardLink>
     </DashboardWrapper>
   );
 };
@@ -71,6 +80,23 @@ const CardContent = styled.div`
   p {
     margin: 6px 0;
     font-size: 16px;
+  }
+`;
+
+const AddressCardLink = styled.div`
+  background-color: #f9f9f9;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  text-align: center;
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.2);
+    transform: translateY(-4px);
   }
 `;
 

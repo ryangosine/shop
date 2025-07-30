@@ -57,7 +57,13 @@ const StyledLink = styled(Link)`
 const StyledNavLink = styled(Link)`
   text-decoration: none;
   color: inherit;
-  margin-right: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 8px 16px;
+
+  display: inline-block;
+
+  margin: 0;
 
   &:last-child {
     margin-right: 0;
@@ -72,14 +78,19 @@ const StyledNavLink = styled(Link)`
   }
 `;
 
-const Greeting = styled.p``;
+const Greeting = styled.p`
+  font-size: 18px;
+  font-weight: 500;
+  padding: 8px 16px;
+
+  display: inline-block;
+
+  margin: 0;
+`;
 
 const Nav = styled.nav`
   display: flex;
   gap: 1rem;
 `;
 
-const LoggedInNav = styled(Nav)`
-  align-items: flex-end;
-`;
 export default Header;
