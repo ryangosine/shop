@@ -21,7 +21,7 @@ const Header = () => {
           <Greeting>Hello {currentUser.firstName}!</Greeting>
           <StyledNavLink to="/dashboard">Dashboard</StyledNavLink>
           <Link to="/cart">
-            <CartIcon itemCount={cartItems.length} />
+            <CartIcon itemCount={cartItems.length} cartItems={cartItems} />
           </Link>
           <LogoutButton />
         </>

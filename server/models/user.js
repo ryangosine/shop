@@ -1,11 +1,23 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const addressSchema = new mongoose.Schema(
+  {
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    province: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    isDefault: { type: Boolean, default: false },
+  },
+  { _id: true }
+);
+
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  addresses: [addressSchema],
 });
 
 userSchema.methods.compareHashedPassword = async function (candidatePassword) {

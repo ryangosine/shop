@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import axios from "axios";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/;
+const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
 
 const RegistrationPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,196 +14,251 @@ const RegistrationPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmError, setConfirmError] = useState("");
-  const [nameError, setNameError] = useState("");
+  const emptyAddr = { street: "", city: "", province: "", postalCode: "" };
+  const [addr, setAddr] = useState(emptyAddr);
+
+  const [showPwd, setShowPwd] = useState(false);
+  const [showPwdC, setShowPwdC] = useState(false);
+
+  const [nameErr, setNameErr] = useState("");
+  const [emailErr, setEmailErr] = useState("");
+  const [pwdErr, setPwdErr] = useState("");
+  const [confErr, setConfErr] = useState("");
+  const [addrErr, setAddrErr] = useState("");
 
   useEffect(() => {
-    if (password && !passwordRegex.test(password)) {
-      setPasswordError(
+    if (password && !passwordRegex.test(password))
+      setPwdErr(
         "Password must include at least 1 lowercase, 1 uppercase, and 1 special character."
       );
-    } else {
-      setPasswordError("");
-    }
+    else setPwdErr("");
   }, [password]);
 
   useEffect(() => {
-    if (passwordConfirm && passwordConfirm !== password) {
-      setConfirmError("Passwords do not match.");
-    } else {
-      setConfirmError("");
-    }
+    if (passwordConfirm && passwordConfirm !== password)
+      setConfErr("Passwords do not match.");
+    else setConfErr("");
   }, [passwordConfirm, password]);
 
+  /* ----------  submit ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    /* names present */
     if (!firstName || !lastName) {
-      setNameError("First name and last name are required.");
+      setNameErr("First and last name are required.");
       return;
-    } else {
-      setNameError("");
-    }
+    } else setNameErr("");
 
-    if (passwordError || confirmError) return;
+    /* address valid */
+    const addressOK =
+      addr.street &&
+      addr.city &&
+      addr.province &&
+      postalRegex.test(addr.postalCode);
+    if (!addressOK) {
+      setAddrErr("Please enter a valid Canadian address.");
+      return;
+    } else setAddrErr("");
+
+    /* password rules passed? */
+    if (pwdErr || confErr) return;
 
     try {
-      const requestData = {
-        firstName,
-        lastName,
-        email,
-        password,
-        passwordConfirm,
-      };
-
-      await axios.post("/register", requestData, {
-        headers: {
-          "Content-Type": "application/json",
+      await axios.post(
+        "/register",
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          passwordConfirm,
+          address: addr,
         },
-      });
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      localStorage.setItem("firstName", firstName);
-      localStorage.setItem("lastName", lastName);
-      alert("Registration successful");
+      alert("Registration successful!");
       window.location.href = "/login";
-    } catch (error) {
-      if (error.response && error.response.data.error) {
-        const errMsg = error.response.data.error;
-        if (errMsg.toLowerCase().includes("email")) {
-          setEmailError(errMsg);
-        } else if (errMsg.toLowerCase().includes("password")) {
-          setPasswordError(errMsg);
-        } else {
-          alert(errMsg);
-        }
-      } else {
-        console.error(error);
-      }
+    } catch (err) {
+      if (err.response?.data?.error) {
+        const msg = err.response.data.error;
+        if (msg.toLowerCase().includes("email")) setEmailErr(msg);
+        else alert(msg);
+      } else console.error(err);
     }
   };
 
   return (
-    <>
-      <RegistrationContainer>
-        <h2>Registration Page</h2>
-        <RegistrationForm onSubmit={handleSubmit}>
-          <InputField
-            type="text"
+    <Container>
+      <h2>Register</h2>
+
+      <Form onSubmit={handleSubmit}>
+        {/* --- Card 1 : user details --- */}
+        <Card>
+          <h3>User Information</h3>
+          <Input
             placeholder="First Name"
+            autoComplete="given-name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
-          <InputField
-            type="text"
+          <Input
             placeholder="Last Name"
+            autoComplete="family-name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
-          {nameError && <ErrorText>{nameError}</ErrorText>}
+          {nameErr && <Err>{nameErr}</Err>}
 
-          <InputField
+          <Input
             type="email"
             placeholder="Email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {emailError && <ErrorText>{emailError}</ErrorText>}
+          {emailErr && <Err>{emailErr}</Err>}
 
-          <PasswordWrapper>
-            <InputField
+          {/* password */}
+          <PwdWrap>
+            <Input
               as="input"
-              type={showPassword ? "text" : "password"}
+              type={showPwd ? "text" : "password"}
               placeholder="Password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{ paddingRight: "40px" }}
             />
-            <EyeToggle onClick={() => setShowPassword((prev) => !prev)}>
-              {showPassword ? "👁️" : "🙈"}
-            </EyeToggle>
-          </PasswordWrapper>
-          {passwordError && <ErrorText>{passwordError}</ErrorText>}
+            <Eye onClick={() => setShowPwd((p) => !p)}>
+              {showPwd ? "👁️" : "🙈"}
+            </Eye>
+          </PwdWrap>
+          {pwdErr && <Err>{pwdErr}</Err>}
 
-          <PasswordWrapper>
-            <InputField
+          <PwdWrap>
+            <Input
               as="input"
-              type={showPasswordConfirm ? "text" : "password"}
-              placeholder="Password Confirmation"
+              type={showPwdC ? "text" : "password"}
+              placeholder="Confirm Password"
+              autoComplete="new-password"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
-              style={{ paddingRight: "40px" }}
             />
-            <EyeToggle onClick={() => setShowPasswordConfirm((prev) => !prev)}>
-              {showPasswordConfirm ? "👁️" : "🙈"}
-            </EyeToggle>
-          </PasswordWrapper>
-          {confirmError && <ErrorText>{confirmError}</ErrorText>}
+            <Eye onClick={() => setShowPwdC((p) => !p)}>
+              {showPwdC ? "👁️" : "🙈"}
+            </Eye>
+          </PwdWrap>
+          {confErr && <Err>{confErr}</Err>}
+        </Card>
 
-          <SubmitButton type="submit">Register</SubmitButton>
-        </RegistrationForm>
-      </RegistrationContainer>
-    </>
+        {/* --- Card 2 : address --- */}
+        <Card>
+          <h3>Shipping Address</h3>
+          <Input
+            placeholder="Street"
+            value={addr.street}
+            onChange={(e) => setAddr({ ...addr, street: e.target.value })}
+          />
+          <Input
+            placeholder="City"
+            value={addr.city}
+            onChange={(e) => setAddr({ ...addr, city: e.target.value })}
+          />
+          <Input
+            placeholder="Province"
+            value={addr.province}
+            onChange={(e) => setAddr({ ...addr, province: e.target.value })}
+          />
+          <Input
+            placeholder="Postal Code"
+            value={addr.postalCode}
+            onChange={(e) => setAddr({ ...addr, postalCode: e.target.value })}
+          />
+          {addrErr && <Err>{addrErr}</Err>}
+        </Card>
+
+        {/* submit below both cards */}
+        <Submit>Register</Submit>
+      </Form>
+    </Container>
   );
 };
 
-const RegistrationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const Container = styled.div`
   margin-top: 50px;
-`;
-
-const RegistrationForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 320px;
 `;
 
-const InputField = styled.input`
+const Form = styled.form`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  max-width: 900px;
+`;
+
+const Card = styled.div`
+  flex: 1 1 340px;
+  min-width: 320px;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: #fff;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+`;
+
+const Input = styled.input`
   width: 100%;
-  padding: 10px;
-  margin: 5px 0;
+  padding: 12px;
+  margin: 8px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 15px;
   box-sizing: border-box;
 `;
 
-const PasswordWrapper = styled.div`
+const PwdWrap = styled.div`
   position: relative;
   width: 100%;
-  margin: 5px 0;
 `;
 
-const EyeToggle = styled.span`
+const Eye = styled.span`
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 1.2em;
 `;
 
-const SubmitButton = styled.button`
-  padding: 10px 20px;
-  margin-top: 10px;
-  background-color: #007bff;
-  color: white;
+const Submit = styled.button`
+  flex-basis: 100%;
+  padding: 12px 28px;
+  background: #007bff;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
+  margin-top: 10px;
 
   &:hover {
-    background-color: #0056b3;
+    background: #0056b3;
   }
 `;
 
-const ErrorText = styled.p`
+const Err = styled.p`
   color: red;
-  font-size: 0.9em;
+  font-size: 0.85em;
+  margin: 4px 0 0;
 `;
 
 export default RegistrationPage;

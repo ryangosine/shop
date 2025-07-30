@@ -1,47 +1,49 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { removeItemFromCart } from "../reducers/cartSlice";
-import { CurrentUserContext } from "../context/currentusercontext";
+
+const TAX_RATES = {
+  gst: 0.05,
+  qst: 0.09975,
+};
 
 const Cart = () => {
-  const { currentUser } = useContext(CurrentUserContext);
-  const cartItems = useSelector((state) => state.cart);
+  const cartItems = useSelector((state) => state.cart || []);
   const dispatch = useDispatch();
-
-  const [quantities, setQuantities] = useState(
+  const [quantities, setQuantities] = useState(() =>
     cartItems.reduce((acc, item) => {
       acc[item.id] = 1;
       return acc;
     }, {})
   );
 
-  const handleQuantityChange = (itemId, value) => {
-    const num = parseInt(value, 10);
-    if (num >= 1) {
-      setQuantities((prev) => ({ ...prev, [itemId]: num }));
-    }
+  const handleQuantityChange = (id, value) => {
+    const qty = Math.max(1, parseInt(value) || 1);
+    setQuantities((prev) => ({ ...prev, [id]: qty }));
   };
 
-  const handleRemoveItemFromCart = (product) => {
-    dispatch(removeItemFromCart(product));
+  const handleRemove = (item) => {
+    dispatch(removeItemFromCart(item));
   };
 
-  const handlePurchase = () => {
-    if (cartItems.length === 0) return alert("Your cart is empty.");
-    alert(`Purchase successful. Check ${currentUser.email} for confirmation.`);
-  };
-
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * (quantities[item.id] || 1),
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * (quantities[item.id] || 1),
     0
   );
+  const gst = subtotal * TAX_RATES.gst;
+  const qst = subtotal * TAX_RATES.qst;
+  const total = subtotal + gst + qst;
+
+  const handlePurchase = () => {
+    alert("Purchase successful. Check your email for confirmation.");
+  };
 
   return (
     <CartWrapper>
       <h2>Your Cart</h2>
       {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <EmptyText>Your cart is empty.</EmptyText>
       ) : (
         <>
           <CartList>
@@ -60,17 +62,20 @@ const Cart = () => {
                   }
                 />
                 <Price>${(item.price * quantities[item.id]).toFixed(2)}</Price>
-                <RemoveButton onClick={() => handleRemoveItemFromCart(item)}>
+                <RemoveButton onClick={() => handleRemove(item)}>
                   Remove
                 </RemoveButton>
               </CartItem>
             ))}
           </CartList>
 
-          <TotalAndCheckout>
-            <CartTotal>Total: ${cartTotal.toFixed(2)}</CartTotal>
+          <TotalSection>
+            <Subtotal>Subtotal: ${subtotal.toFixed(2)}</Subtotal>
+            <TaxLine>GST (5%): ${gst.toFixed(2)}</TaxLine>
+            <TaxLine>QST (9.975%): ${qst.toFixed(2)}</TaxLine>
+            <GrandTotal>Total (incl. taxes): ${total.toFixed(2)}</GrandTotal>
             <PurchaseButton onClick={handlePurchase}>Purchase</PurchaseButton>
-          </TotalAndCheckout>
+          </TotalSection>
         </>
       )}
     </CartWrapper>
@@ -78,37 +83,44 @@ const Cart = () => {
 };
 
 const CartWrapper = styled.div`
-  margin: 20px;
-  padding: 20px;
+  padding: 40px;
+  max-width: 1000px;
+  margin: auto;
+`;
+
+const EmptyText = styled.p`
+  font-size: 16px;
+  color: #888;
 `;
 
 const CartList = styled.ul`
   list-style: none;
   padding: 0;
+  margin-bottom: 20px;
 `;
 
 const CartItem = styled.li`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
 `;
 
 const ItemInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
   flex: 1;
+  gap: 12px;
 `;
 
 const ItemImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-  border: 1px solid #eee;
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 `;
 
 const ItemTitle = styled.span`
@@ -118,49 +130,66 @@ const ItemTitle = styled.span`
 
 const QuantityInput = styled.input`
   width: 60px;
-  margin: 0 10px;
-  padding: 5px;
+  padding: 6px;
+  margin-right: 10px;
 `;
 
-const Price = styled.span`
-  font-size: 16px;
+const Price = styled.div`
+  width: 90px;
   font-weight: bold;
-  margin-right: 20px;
+  text-align: right;
 `;
 
 const RemoveButton = styled.button`
-  background-color: #ff5757;
+  background-color: #dc3545;
   color: white;
+  padding: 6px 10px;
+  margin: 20px;
   border: none;
-  padding: 5px 10px;
-  cursor: pointer;
   border-radius: 4px;
+  cursor: pointer;
 
   &:hover {
-    background-color: #ff2c2c;
+    background-color: #b52b3b;
   }
 `;
 
-const TotalAndCheckout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+const TotalSection = styled.div`
+  width: 300px;
+  float: right;
+  padding: 20px;
   margin-top: 20px;
-  flex-wrap: wrap;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 `;
 
-const CartTotal = styled.div`
-  font-size: 20px;
+const Subtotal = styled.div`
+  font-size: 16px;
+  margin-bottom: 6px;
+`;
+
+const TaxLine = styled.div`
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+`;
+
+const GrandTotal = styled.div`
+  font-size: 18px;
   font-weight: bold;
+  margin: 12px 0;
 `;
 
 const PurchaseButton = styled.button`
+  width: 100%;
+  padding: 12px;
   background-color: #28a745;
   color: white;
   border: none;
-  padding: 10px 16px;
+  border-radius: 6px;
   font-size: 16px;
-  border-radius: 4px;
   cursor: pointer;
 
   &:hover {
