@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { removeItemFromCart } from "../reducers/cartSlice";
+import { removeItemFromCart, clearCart } from "../reducers/cartSlice";
+import axios from "axios";
+import { CurrentUserContext } from "../context/currentusercontext";
+import { useNavigate } from "react-router";
 
 const TAX_RATES = {
   gst: 0.05,
@@ -9,13 +12,12 @@ const TAX_RATES = {
 };
 
 const Cart = () => {
+  const { currentUser } = useContext(CurrentUserContext);
   const cartItems = useSelector((state) => state.cart || []);
   const dispatch = useDispatch();
-  const [quantities, setQuantities] = useState(() =>
-    cartItems.reduce((acc, item) => {
-      acc[item.id] = 1;
-      return acc;
-    }, {})
+  const navigate = useNavigate();
+  const [quantities, setQuantities] = useState(
+    cartItems.reduce((acc, item) => ({ ...acc, [item.id]: 1 }), {})
   );
 
   const handleQuantityChange = (id, value) => {
@@ -34,6 +36,33 @@ const Cart = () => {
   const gst = subtotal * TAX_RATES.gst;
   const qst = subtotal * TAX_RATES.qst;
   const total = subtotal + gst + qst;
+
+  const handlePlaceOrder = async () => {
+    try {
+      const orderItems = cartItems.map((item) => ({
+        productId: item.id.toString(), // keep consistent with Mongo
+        name: item.title,
+        price: item.price,
+        quantity: quantities[item.id] || 1,
+      }));
+
+      const totalAmount = orderItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      await axios.post(`/api/users/${currentUser._id}/orders`, {
+        items: orderItems,
+        totalAmount,
+      });
+
+      dispatch(clearCart());
+      navigate("/orders");
+    } catch (err) {
+      console.error("Order failed", err);
+      alert("Order failed.");
+    }
+  };
 
   const handlePurchase = () => {
     alert("Purchase successful. Check your email for confirmation.");
@@ -74,7 +103,14 @@ const Cart = () => {
             <TaxLine>GST (5%): ${gst.toFixed(2)}</TaxLine>
             <TaxLine>QST (9.975%): ${qst.toFixed(2)}</TaxLine>
             <GrandTotal>Total (incl. taxes): ${total.toFixed(2)}</GrandTotal>
-            <PurchaseButton onClick={handlePurchase}>Purchase</PurchaseButton>
+            <PurchaseButton
+              onClick={() => {
+                handlePurchase();
+                handlePlaceOrder();
+              }}
+            >
+              Purchase
+            </PurchaseButton>
           </TotalSection>
         </>
       )}

@@ -37,6 +37,11 @@ const Dashboard = () => {
         )}
       </UserCard>
 
+      <OrdersCard onClick={() => navigate("/orders")}>
+        <h3>Your Orders</h3>
+        <p>Click to view your past orders and reorder items.</p>
+      </OrdersCard>
+
       <AddressCardLink onClick={() => navigate("/addresses")}>
         <h3>Your Addresses</h3>
         <p>Manage your address information</p>
@@ -80,6 +85,22 @@ const CardContent = styled.div`
   p {
     margin: 6px 0;
     font-size: 16px;
+  }
+`;
+const OrdersCard = styled.div`
+  background-color: #f9f9f9;
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-align: center;
+  &:hover {
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.2);
+    transform: translateY(-4px);
   }
 `;
 

@@ -13,6 +13,8 @@ const helmet = require("helmet");
 const { app } = require("./handlers"); // your existing express() instance
 const User = require("./models/user");
 const usersRoutes = require("./routes/users"); // any non‑address routes
+const cartRoutes = require("./routes/cart");
+const orderRoutes = require("./routes/orders");
 
 /*─────────────────  1. Mongo connection  ─────────────────*/
 mongoose
@@ -26,6 +28,8 @@ mongoose
     process.exit(1);
   });
 
+mongoose.set("debug", true);
+
 /*─────────────────  2. Middleware  ─────────────────*/
 app.use(helmet());
 
@@ -35,8 +39,9 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(express.json()); // replaces body‑parser
+app.use(express.json());
+app.use("/api/cart", cartRoutes);
+app.use("/api", orderRoutes);
 
 app.use(
   session({
@@ -148,7 +153,134 @@ app.post("/register", async (req, res) => {
   }
 });
 
-/*─────────────────  6. Address router  ─────────────────*/
+/* ─── Cart Route ────────────────────────────────────────────────────────────── */
+app.post("/api/cart", async (req, res) => {
+  const { userId, productId, quantity } = req.body;
+  let cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    cart = new Cart({ user: userId, items: [] });
+  }
+
+  const existing = cart.items.find((i) => i.productId.toString() === productId);
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.items.push({ productId, quantity });
+  }
+
+  await cart.save();
+  console.log("Cart created/updated:", cart);
+  res.status(200).json({ message: "Cart updated", cart });
+});
+
+/*─────────────────  6. Orders  ─────────────────*/
+
+const Order = require("./models/Order");
+const Cart = require("./models/Cart");
+
+app.get("/api/users/:userId/orders", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { range, q } = req.query;
+
+    const query = { user: userId };
+    if (range) {
+      const now = new Date();
+      const daysMap = {
+        week: 7,
+        "2weeks": 14,
+        month: 30,
+        "3months": 90,
+      };
+      const days = daysMap[range];
+      if (days) {
+        const cutoff = new Date(now.setDate(now.getDate() - days));
+        query.createdAt = { $gte: cutoff };
+      }
+    }
+
+    const orders = await Order.find(query).sort({ createdAt: -1 });
+
+    if (q) {
+      const lower = q.toLowerCase();
+      const filtered = orders.filter((order) =>
+        order.items.some((item) => item.name.toLowerCase().includes(lower))
+      );
+      return res.json(filtered);
+    }
+
+    res.json(orders);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch orders." });
+  }
+});
+
+// Reorder
+app.post("/api/orders/:orderId/reorder", async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const oldOrder = await Order.findById(orderId);
+    if (!oldOrder)
+      return res.status(404).json({ error: "Original order not found." });
+
+    const newOrder = new Order({
+      user: oldOrder.user,
+      items: oldOrder.items,
+      totalAmount: oldOrder.totalAmount,
+    });
+
+    await newOrder.save();
+    res.status(201).json({ message: "Order reordered.", order: newOrder });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Reorder failed." });
+  }
+});
+
+// Checkout
+app.post("/api/users/:id/orders", async (req, res) => {
+  console.log("🔔 checkout route hit");
+  try {
+    const userId = req.params.id;
+    const cart = await Cart.findOne({ user: userId }).populate(
+      "items.productId"
+    );
+    console.log("Cart fetched:", cart);
+
+    if (!cart || cart.items.length === 0) {
+      console.log("Cart is empty");
+      return res.status(400).json({ error: "Cart is empty." });
+    }
+
+    const items = cart.items.map((item) => ({
+      productId: item.productId._id,
+      name: item.productId.name,
+      price: item.productId.price,
+      quantity: item.quantity,
+    }));
+    console.log("Order items:", items);
+
+    const totalAmount = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const order = new Order({ user: userId, items, totalAmount });
+    console.log("Saving order:", order);
+
+    await order.save();
+    console.log("Order saved:", order);
+
+    cart.items = [];
+    await cart.save();
+    console.log("Cart cleared");
+
+    res.status(201).json({ message: "Order placed successfully.", order });
+  } catch (err) {
+    console.error("Error in checkout:", err);
+    res.status(500).json({ error: "Failed to place order." });
+  }
+});
+
+/*─────────────────  7. Address router  ─────────────────*/
 const addrRouter = express.Router({ mergeParams: true });
 
 const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
@@ -240,12 +372,12 @@ addrRouter.delete("/:aid", async (req, res) => {
 
 app.use("/api/users/:id/addresses", addrRouter);
 
-/*─────────────────  7. Other routes  ─────────────────*/
-app.use("/api/users", usersRoutes); // keep anything else you already had
+/*─────────────────  8. Other routes  ─────────────────*/
+app.use("/api/users", usersRoutes);
 
-/*─────────────────  8. 404 fallback  ─────────────────*/
+/*─────────────────  9. 404 fallback  ─────────────────*/
 app.all("*", (_, res) => res.status(404).json({ error: "Route not found." }));
 
-/*─────────────────  9. Start server  ─────────────────*/
+/*─────────────────  10. Start server  ─────────────────*/
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`🚀  Server listening on ${PORT}`));

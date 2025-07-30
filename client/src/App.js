@@ -10,6 +10,7 @@ import {
 import Header from "./components/header";
 import Dashboard from "./pages/dashboard";
 import Cart from "./pages/cart";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
 import Addresses from "./pages/Addresses";
 import AddAddressPage from "./pages/AddAddress";
 import EditAddressPage from "./pages/EditAddress";
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/orders" element={<OrderHistoryPage />} />
           <Route path="/addresses" element={<Addresses />} />
           <Route path="/addresses/new" element={<AddAddressPage />} />
           <Route path="/addresses/:aid/edit" element={<EditAddressPage />} />
