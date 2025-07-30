@@ -9,9 +9,12 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginError("");
+
     try {
       const requestData = { email, password };
       const response = await axios.post("/login", requestData, {
@@ -19,12 +22,27 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
       });
+
       const { _id, firstName } = response.data;
       localStorage.setItem("user", JSON.stringify({ email, firstName, _id }));
       setCurrentUser({ ...currentUser, email, firstName, _id });
       setLoggedIn(true);
     } catch (error) {
       console.error(error);
+
+      if (error.response && error.response.data?.error) {
+        const errMsg = error.response.data.error.toLowerCase();
+
+        if (errMsg.includes("password")) {
+          setLoginError("Password does not match our records.");
+        } else if (errMsg.includes("email")) {
+          setLoginError("No account found with this email.");
+        } else {
+          setLoginError("Login failed. Please try again.");
+        }
+      } else {
+        setLoginError("Network error or server unavailable.");
+      }
     }
   };
 
@@ -33,27 +51,29 @@ const LoginPage = () => {
       window.location.href = "/";
     }
   }, [loggedIn]);
+
   return (
-    <>
-      <LoginContainer>
-        <h2>Log In </h2>
-        <LoginForm onSubmit={handleLogin}>
-          <InputField
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <InputField
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <SubmitButton type="submit">Log In</SubmitButton>
-        </LoginForm>
-      </LoginContainer>
-    </>
+    <LoginContainer>
+      <h2>Log In</h2>
+      <LoginForm onSubmit={handleLogin}>
+        <InputField
+          type="email"
+          autoComplete="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <InputField
+          type="password"
+          autoComplete="current-password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {loginError && <ErrorText>{loginError}</ErrorText>}
+        <SubmitButton type="submit">Log In</SubmitButton>
+      </LoginForm>
+    </LoginContainer>
   );
 };
 
@@ -90,6 +110,12 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: 0.9em;
+  margin: 6px 0;
 `;
 
 export default LoginPage;

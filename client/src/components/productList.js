@@ -33,31 +33,31 @@ const ProductList = () => {
     <>
       <CategoryHeader>
         <CategoryButton
-          active={selectedCategory.toString() === "all"}
+          $active={selectedCategory.toString() === "all"}
           onClick={() => setSelectedCategory("all")}
         >
           All
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory.toString() === "jewelery"}
+          $active={selectedCategory.toString() === "jewelery"}
           onClick={() => setSelectedCategory("jewelery")}
         >
           Jewelry
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory.toString() === "men's clothing"}
+          $active={selectedCategory.toString() === "men's clothing"}
           onClick={() => setSelectedCategory("men's clothing")}
         >
           Men's Clothing
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory.toString() === "women's clothing"}
+          $active={selectedCategory.toString() === "women's clothing"}
           onClick={() => setSelectedCategory("women's clothing")}
         >
           Women's Clothing
         </CategoryButton>
         <CategoryButton
-          active={selectedCategory.toString() === "electronics"}
+          $active={selectedCategory.toString() === "electronics"}
           onClick={() => setSelectedCategory("electronics")}
         >
           Electronics
@@ -94,7 +94,7 @@ const CategoryButton = styled.button`
   cursor: pointer;
 
   ${(props) =>
-    props.active &&
+    props.$active &&
     css`
       background-color: #007bff;
       color: white;
