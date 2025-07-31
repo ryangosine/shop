@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api";
 import styled from "styled-components";
 
 const OrderTracking = ({ user }) => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get(`/api/users/${user.id}/orders`).then((response) => {
+    API.get(`/api/users/${user.id}/orders`).then((response) => {
       setOrders(response.data);
     });
   }, [user.id]);

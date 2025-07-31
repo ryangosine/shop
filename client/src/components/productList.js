@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api";
 import styled, { css } from "styled-components";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../reducers/cartSlice";
@@ -10,8 +10,7 @@ const ProductList = () => {
   const dispatch = useDispatch(); // Create a dispatch function
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
+    API.get("https://fakestoreapi.com/products")
       .then((response) => {
         setProducts(response.data);
       })

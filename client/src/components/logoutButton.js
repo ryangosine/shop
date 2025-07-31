@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { CurrentUserContext } from "../context/currentusercontext";
-import axios from "axios";
+import API from "../api";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -10,7 +10,7 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/logout");
+      await API.post("/logout");
       setCurrentUser({ email: null, firstName: "" });
       localStorage.removeItem("user");
       localStorage.removeItem("firstName");

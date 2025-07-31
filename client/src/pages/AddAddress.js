@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import API from "../api";
 import { CurrentUserContext } from "../context/currentusercontext";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +33,7 @@ const AddAddressPage = () => {
       return;
     }
     try {
-      await axios.post(`/api/users/${currentUser._id}/addresses`, {
+      await API.post(`/api/users/${currentUser._id}/addresses`, {
         ...formData,
         isDefault: false,
       });

@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/;
@@ -35,7 +35,7 @@ const UserInformation = ({ user }) => {
     if (error || !newPassword || !confirmPassword) return;
 
     try {
-      const response = await axios.put(`/api/users/${user._id}/password`, {
+      const response = await API.put(`/api/users/${user._id}/password`, {
         newPassword,
       });
 

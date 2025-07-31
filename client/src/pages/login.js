@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
-import axios from "axios";
+import API from "../api";
 
 const LoginPage = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
@@ -17,7 +17,7 @@ const LoginPage = () => {
 
     try {
       const requestData = { email, password };
-      const response = await axios.post("/login", requestData, {
+      const response = await API.post("/login", requestData, {
         headers: {
           "Content-Type": "application/json",
         },

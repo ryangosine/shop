@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api";
 import styled from "styled-components";
 import { CurrentUserContext } from "../context/currentusercontext";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ const OrderHistoryPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`/api/users/${currentUser._id}/orders`);
+        const res = await API.get(`/api/users/${currentUser._id}/orders`);
         setOrders(res.data);
       } catch {
         setError("Failed to fetch orders.");
@@ -32,7 +32,7 @@ const OrderHistoryPage = () => {
 
       // Add each item to the cart
       for (const item of order.items) {
-        await axios.post("/api/cart", {
+        await API.post("/api/cart", {
           productId: item.productId,
           quantity: item.quantity || 1,
         });

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import API from "../api";
 import { CurrentUserContext } from "../context/currentusercontext";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const Addresses = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const res = await axios.get(`/api/users/${currentUser._id}/addresses`);
+        const res = await API.get(`/api/users/${currentUser._id}/addresses`);
         setAddresses(res.data);
       } catch {
         setError("Failed to fetch addresses.");
@@ -24,7 +24,7 @@ const Addresses = () => {
 
   const handleSetDefault = async (aid) => {
     try {
-      await axios.put(`/api/users/${currentUser._id}/addresses/${aid}`, {
+      await API.put(`/api/users/${currentUser._id}/addresses/${aid}`, {
         isDefault: true,
       });
       // Update local state: mark this address as default, others as not default
@@ -42,7 +42,7 @@ const Addresses = () => {
 
   const handleDelete = async (aid) => {
     try {
-      await axios.delete(`/api/users/${currentUser._id}/addresses/${aid}`);
+      await API.delete(`/api/users/${currentUser._id}/addresses/${aid}`);
       setAddresses(addresses.filter((addr) => addr._id !== aid));
     } catch {
       setError("Failed to delete address.");

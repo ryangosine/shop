@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import API from "../api";
 import { CurrentUserContext } from "../context/currentusercontext";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 
@@ -34,9 +34,7 @@ const EditAddressPage = () => {
       // Otherwise, fetch addresses and find the one to edit
       const fetchAddress = async () => {
         try {
-          const res = await axios.get(
-            `/api/users/${currentUser._id}/addresses`
-          );
+          const res = await API.get(`/api/users/${currentUser._id}/addresses`);
           const addr = res.data.find((a) => a._id === aid);
           if (addr) {
             setFormData({
@@ -66,10 +64,7 @@ const EditAddressPage = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.put(
-        `/api/users/${currentUser._id}/addresses/${aid}`,
-        formData
-      );
+      await API.put(`/api/users/${currentUser._id}/addresses/${aid}`, formData);
       navigate("/addresses");
     } catch (err) {
       const msg = err.response?.data?.error || "Failed to update address.";

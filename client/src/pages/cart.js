@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { removeItemFromCart, clearCart } from "../reducers/cartSlice";
-import axios from "axios";
+import API from "../api";
 import { CurrentUserContext } from "../context/currentusercontext";
 import { useNavigate } from "react-router";
 
@@ -51,7 +51,7 @@ const Cart = () => {
         0
       );
 
-      await axios.post(`/api/users/${currentUser._id}/orders`, {
+      await API.post(`/api/users/${currentUser._id}/orders`, {
         items: orderItems,
         totalAmount,
       });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import axios from "axios";
+import API from "../api";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/;
 const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
@@ -63,7 +63,7 @@ const RegistrationPage = () => {
     if (pwdErr || confErr) return;
 
     try {
-      await axios.post(
+      await API.post(
         "/register",
         {
           firstName,
