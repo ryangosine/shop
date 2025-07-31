@@ -106,12 +106,19 @@ const AddressesWrapper = styled.div`
   max-width: 800px;
   margin: 40px auto;
   padding: 0 20px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const AddressList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const AddressCard = styled.div`
@@ -120,6 +127,10 @@ const AddressCard = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const DefaultBadge = styled.span`
@@ -131,17 +142,29 @@ const DefaultBadge = styled.span`
   font-size: 12px;
   padding: 3px 8px;
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const AddressInfo = styled.div`
   line-height: 1.6;
   margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const CardActions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ActionButton = styled.button`
@@ -153,6 +176,9 @@ const ActionButton = styled.button`
   cursor: pointer;
   &:hover {
     background: #e0e0e0;
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+    }
   }
 `;
 
@@ -168,6 +194,9 @@ const AddAddressButton = styled.button`
   cursor: pointer;
   &:hover {
     background: #0056b3;
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

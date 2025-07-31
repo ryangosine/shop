@@ -85,6 +85,9 @@ const CategoryHeader = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const CategoryButton = styled.button`
@@ -100,6 +103,9 @@ const CategoryButton = styled.button`
       color: white;
       font-weight: bold;
     `}
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ProductListWrapper = styled.div`
@@ -107,6 +113,9 @@ const ProductListWrapper = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   padding: 20px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ProductCard = styled.div`
@@ -116,6 +125,9 @@ const ProductCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ProductImage = styled.img`
@@ -123,6 +135,9 @@ const ProductImage = styled.img`
   max-height: 200px;
   object-fit: cover;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export default ProductList;

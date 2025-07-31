@@ -132,12 +132,18 @@ const FormWrapper = styled.div`
     label {
       margin: 10px 0 4px;
       font-weight: bold;
+      @media (max-width: 768px) {
+        padding: 0.5rem;
+      }
     }
     input {
       padding: 8px;
       margin-bottom: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      @media (max-width: 768px) {
+        padding: 0.5rem;
+      }
     }
     button {
       padding: 10px;
@@ -151,6 +157,12 @@ const FormWrapper = styled.div`
         background-color: #0056b3;
       }
     }
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+    }
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

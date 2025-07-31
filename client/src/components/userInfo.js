@@ -131,6 +131,9 @@ const UserInfoContainer = styled.div`
       }
     }
   }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ErrorText = styled.p`

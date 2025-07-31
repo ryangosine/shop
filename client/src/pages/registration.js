@@ -188,6 +188,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Form = styled.form`
@@ -196,6 +199,9 @@ const Form = styled.form`
   gap: 32px;
   justify-content: center;
   max-width: 900px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Card = styled.div`
@@ -212,6 +218,9 @@ const Card = styled.div`
     margin-bottom: 12px;
     font-size: 18px;
   }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Input = styled.input`
@@ -222,11 +231,17 @@ const Input = styled.input`
   border-radius: 4px;
   font-size: 15px;
   box-sizing: border-box;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const PwdWrap = styled.div`
   position: relative;
   width: 100%;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Eye = styled.span`
@@ -235,6 +250,9 @@ const Eye = styled.span`
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Submit = styled.button`
@@ -250,6 +268,9 @@ const Submit = styled.button`
 
   &:hover {
     background: #0056b3;
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

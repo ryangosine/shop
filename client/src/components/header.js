@@ -43,15 +43,24 @@ const HeaderWrapper = styled.div`
   padding: 1rem;
   background-color: #333;
   color: white;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const HeaderTitle = styled.h1`
   margin: 0;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const StyledNavLink = styled(Link)`
@@ -76,6 +85,9 @@ const StyledNavLink = styled(Link)`
   &.active {
     font-weight: bold;
   }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Greeting = styled.p`
@@ -86,11 +98,17 @@ const Greeting = styled.p`
   display: inline-block;
 
   margin: 0;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Nav = styled.nav`
   display: flex;
   gap: 1rem;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export default Header;

@@ -122,17 +122,28 @@ const CartWrapper = styled.div`
   padding: 40px;
   max-width: 1000px;
   margin: auto;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const EmptyText = styled.p`
   font-size: 16px;
   color: #888;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const CartList = styled.ul`
   list-style: none;
   padding: 0;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const CartItem = styled.li`
@@ -142,6 +153,9 @@ const CartItem = styled.li`
   margin-bottom: 15px;
   padding: 12px;
   border-bottom: 1px solid #eee;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ItemInfo = styled.div`
@@ -149,6 +163,10 @@ const ItemInfo = styled.div`
   align-items: center;
   flex: 1;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ItemImage = styled.img`
@@ -157,23 +175,36 @@ const ItemImage = styled.img`
   object-fit: contain;
   border-radius: 6px;
   border: 1px solid #ccc;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ItemTitle = styled.span`
   font-size: 16px;
   font-weight: 500;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const QuantityInput = styled.input`
   width: 60px;
   padding: 6px;
   margin-right: 10px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Price = styled.div`
   width: 90px;
   font-weight: bold;
   text-align: right;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const RemoveButton = styled.button`
@@ -188,6 +219,9 @@ const RemoveButton = styled.button`
   &:hover {
     background-color: #b52b3b;
   }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const TotalSection = styled.div`
@@ -199,23 +233,35 @@ const TotalSection = styled.div`
   border-radius: 8px;
   background-color: #f8f9fa;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const Subtotal = styled.div`
   font-size: 16px;
   margin-bottom: 6px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const TaxLine = styled.div`
   font-size: 14px;
   color: #555;
   margin-bottom: 4px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const GrandTotal = styled.div`
   font-size: 18px;
   font-weight: bold;
   margin: 12px 0;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const PurchaseButton = styled.button`
@@ -230,6 +276,9 @@ const PurchaseButton = styled.button`
 
   &:hover {
     background-color: #218838;
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

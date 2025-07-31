@@ -43,6 +43,9 @@ const StyledButton = styled.button`
     outline: none;
     box-shadow: 0 0 0 2px rgba(255, 75, 92, 0.3);
   }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export default LogoutButton;

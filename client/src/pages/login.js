@@ -88,6 +88,9 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const InputField = styled.input`
@@ -96,6 +99,9 @@ const InputField = styled.input`
   margin: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -109,6 +115,9 @@ const SubmitButton = styled.button`
 
   &:hover {
     background-color: #0056b3;
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

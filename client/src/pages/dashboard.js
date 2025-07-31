@@ -72,6 +72,10 @@ const UserCard = styled.div`
     box-shadow: 0 4px 20px rgba(0, 123, 255, 0.2);
     transform: translateY(-4px);
   }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const CardContent = styled.div`
@@ -85,6 +89,10 @@ const CardContent = styled.div`
   p {
     margin: 6px 0;
     font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 const OrdersCard = styled.div`
@@ -102,6 +110,10 @@ const OrdersCard = styled.div`
     box-shadow: 0 4px 20px rgba(40, 167, 69, 0.2);
     transform: translateY(-4px);
   }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const AddressCardLink = styled.div`
@@ -118,6 +130,10 @@ const AddressCardLink = styled.div`
   &:hover {
     box-shadow: 0 4px 20px rgba(0, 123, 255, 0.2);
     transform: translateY(-4px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 

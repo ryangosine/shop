@@ -107,6 +107,9 @@ const FormWrapper = styled.div`
       margin-bottom: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      @media (max-width: 768px) {
+        padding: 0.5rem;
+      }
     }
     button {
       padding: 10px;
@@ -120,6 +123,13 @@ const FormWrapper = styled.div`
         background-color: #0056b3;
       }
     }
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
   }
 `;
 
